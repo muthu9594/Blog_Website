@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 //constanta api notification
-import { API_NOTIFICATION_MESSAGES } from '../constants/config.js';
+import { API_NOTIFICATION_MESSAGES, SERVICE_URLS } from '../constants/config.js';
 
 const API_URL= 'http://localhost:8000';
 
@@ -42,7 +42,7 @@ axiosInstance.interceptors.response.use(
 ///////////////////////////// 
 const processResponse = (response)=>{
     if(response?.status === 200){
-        return {isSucess:true, data: response.data}
+        return {isSuccess:true, data: response.data}
     }else{
         return{
             isFailure: true,
@@ -59,10 +59,10 @@ const processResponse = (response)=>{
 // if fail     -> return(isFailure:true,status: string,msg:string,code:int)
 ///////////////////////////// 
 const processError =(error)=>{
-    console.log('ERROR IN RESPOMSE',error.toJSON());
     if(error.response){
         //request made and server responded with a status other
         //that falls out of the range 2.x.x
+        console.log('ERROR IN RESPONSE',error.toJSON());
         return{
         isError: true,
         msg: API_NOTIFICATION_MESSAGES.responseFailure,
@@ -86,3 +86,31 @@ const processError =(error)=>{
         }
     }
 }
+
+
+const API = {};
+
+for (const [key,value] of Object.entries(SERVICE_URLS)){
+    API[key] = (body, showUploadProgress, showDownloadProgress)=>
+        axiosInstance({
+            method: value.method,
+            url: value.url,
+            data: body,
+            responseType: value.responseType,
+            onUploadProgress: function (progressEvent) {
+                if (showUploadProgress) {
+                    let precentageCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    showDownloadProgress(precentageCompleted);
+                }
+            },
+            onDownloadProgress: function (progressEvent) {
+                if (showDownloadProgress) {
+                    let precentageCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+                    showDownloadProgress(precentageCompleted);
+                }
+            }
+            
+        })
+    }
+
+    export { API };
