@@ -48,7 +48,7 @@ const SignUpButton = styled(Button)`
 
 const Text = styled(Typography)`
     color: #878787;
-    font-size: 16px
+    font-size: 12px
 `;
 
 const Error = styled(Typography)`
@@ -58,6 +58,11 @@ const Error = styled(Typography)`
     margin-top: 10px,
     font-weight:600
 `;
+
+const loginInitialValues={
+    username:'',
+    password:''
+};
 
 const signupInitialValues={
     name:'',
@@ -72,33 +77,52 @@ const Login = ()=>{
     
     const [account,toggleAccount]=useState('login');
     const [signup,setSignup]=useState(signupInitialValues);
+    const [login,setLogin]=useState(loginInitialValues);
     const [error,setError]=useState('');
     
+    //toggeling signup and login page
     const toggleSignUp = () =>{
-        account === 'login' ?
-        toggleAccount('signup') : toggleAccount('login'); 
-        
+        account === 'signup' ? toggleAccount('login') : toggleAccount('signup');      
     };
 
+    //setting the input values for signup
     const onInputChange = (e) =>{
       
-        setSignup(previousInitialValues =>
-            ({...previousInitialValues,[e.target.name] : e.target.value})
-      ); 
+        setSignup({...signup,[e.target.name] : e.target.value}); 
     };
 
 
-
+    //sending data to backend
     const signupUser = async()=>{
         let response = await API.userSignup(signup);
         if(response.isSuccess){
             setError('');
             setSignup(signupInitialValues);
-            toggleAccount('login')
+            toggleAccount('login');
         }else {
             setError("Something went Wrong,Please try again later");
         }
     }
+
+
+    //getting the input values from login to login the user
+    const onValueChange = (e) =>{
+        setLogin({...login, [e.target.name]:e.target.value});
+    }
+
+    //sending data by clicking the login button
+    const loginUser =async () =>{
+        let response = await API.userLogin(login);
+        if(response.isSuccess){
+                setError('');
+                sessionStorage.setItem('accessToken',`Bearer ${response.data.accessToken}`);
+                sessionStorage.setItem('refreshToken',`Bearer ${response.data.refreshToken}`);
+        }else{
+            setError("Something went wrong please try again later");
+        }
+    }
+
+
 
     return(
         <Component>
@@ -107,13 +131,10 @@ const Login = ()=>{
                 {
                     account === 'login' ?
                     <Wrapper>
-                        <TextField variant="standard" label="Enter username"/>
-                        <TextField variant="standard" label="Enter password"/> 
-                        
-                        {error && <Error>{error}</Error>}
-
-
-                        <LoginButton variant="contained">Login</LoginButton>
+                        <TextField variant="standard" value={login.username} onChange={(e)=>onValueChange(e)} name="username" label="Enter username"/>
+                        <TextField variant="standard" value={login.password } onChange={(e)=>onValueChange(e)} name="password" label="Enter password"/>
+                             {error && <Error>{error}</Error>}
+                        <LoginButton variant="contained" onClick={()=>loginUser()}>Login</LoginButton>
                         <Text style={{textAlign:`center`}}>OR</Text>
                         <SignUpButton onClick={()=>toggleSignUp()}>Create an account</SignUpButton>
                     </Wrapper>

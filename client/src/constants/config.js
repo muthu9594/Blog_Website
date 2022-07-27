@@ -10,7 +10,7 @@ export const API_NOTIFICATION_MESSAGES={
     },
     responseFailure: {
         title: 'Error',
-        message: 'An error occured while fetching respponse from the server. Please try again'
+        message: 'An error occured while fetching response from the server. Please try again'
     },
     requestFailure: {
         title: 'Error',
@@ -26,5 +26,6 @@ export const API_NOTIFICATION_MESSAGES={
 //SAMPLE REQUEST 
 // NEED SERVICE CALL :  { url: '/',method:'POST/GET/PUT/DELETE' params:true/false, query:true/false}
 export const SERVICE_URLS = {
-    userSignup: {url:'/signup',method:'POST'}
+    userSignup: {url:'/signup',method:'POST'},
+    userLogin: {url: '/login',method:'POST'}
 }
