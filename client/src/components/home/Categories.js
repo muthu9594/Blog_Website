@@ -5,6 +5,9 @@ import { Button , Table , TableCell , TableRow, TableHead , TableBody , styled} 
 //constants
 import { categories } from "../../constants/data.js";
 
+//route dom
+import { Link } from "react-router-dom";
+
 
 const StyledTable =styled(Table)`
     border:1px solid rgba(224 , 224 , 224 , 1);
@@ -20,7 +23,9 @@ const StyledButton=styled(Button)`
 const Categories = () =>{
     return(
         <>
+        <Link to='/create' style={{textDecoration:'none'}}>
             <StyledButton> Create Blog</StyledButton>
+        </Link>
             <StyledTable>
                 <TableHead>
                     <TableRow>
