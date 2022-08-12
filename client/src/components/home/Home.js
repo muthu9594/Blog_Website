@@ -2,9 +2,11 @@
 //components
 import Categories from "./Categories";
 import Banner from "../banner/Banner";
+import Posts from "./post/Posts.js";
 
 //mui
 import { Grid } from "@mui/material";
+
 
 
 const Home = () =>{
@@ -16,7 +18,7 @@ const Home = () =>{
                     <Categories/>
                 </Grid>
                 <Grid container item xs={12} sm={10} lg={10}>
-                    Posts
+                   <Posts/>
                 </Grid>
             </Grid>
             

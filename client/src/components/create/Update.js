@@ -9,7 +9,7 @@ import { Box, styled, FormControl, InputBase , Button , TextareaAutosize } from 
 import {AddCircle as Add} from '@mui/icons-material';
 
 //router
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate , useParams} from "react-router-dom";
 
 //context
 import {DataContext} from '../../context/DataProvider'
@@ -17,6 +17,12 @@ import {DataContext} from '../../context/DataProvider'
 //API
 import {API} from '../../service/api.js'
 
+const Container = styled(Box)(({theme})=>({
+    margin:'50px 100px',
+    [theme.breakpoints.down('md')]:{
+        margin:0
+    }
+}));
 
 const Image =styled('img')({
     width:'100%',
@@ -37,12 +43,7 @@ const InputTextField=styled(InputBase)`
 `;
 
 
-const Container = styled(Box)(({theme})=>({
-    margin:'50px 100px',
-    [theme.breakpoints.down('md')]:{
-        margin:0
-    }
-}));
+
 
 const TextArea= styled(TextareaAutosize)`
     width:100%;
@@ -66,7 +67,7 @@ const initialPost={
 
 
 
-const CreatePost=()=> { 
+const Update=()=> { 
     const [post,setPost]=useState(initialPost);
     const [file,setFile]=useState('');
 
@@ -74,9 +75,21 @@ const CreatePost=()=> {
 
     const location=useLocation();
     const navigate=useNavigate();
+    const {id}=useParams();
 
     //if there is picture in post.picture then show that other wise default picture
     const ImageUrl= post.picture ? post.picture : 'https://www.neokoncepts.com/wp-content/uploads/2015/09/our_blog_banner.jpg';
+
+    useEffect(()=>{
+        const fetchData=async ()=>{
+           let response= await API.getPostById(id)
+           if(response.isSuccess){
+            setPost(response.data);
+           }
+        }
+        fetchData();
+    },[])
+
 
     useEffect(()=>{
         const getImage =async () =>{
@@ -102,10 +115,10 @@ const CreatePost=()=> {
         setPost({...post,[e.target.name]:e.target.value})
     }
     
-    const savePost=async()=>{
-       let response= await API.createPost(post);
+    const updateBlogPost=async()=>{
+       let response= await API.updatePost(post);
        if(response.isSuccess){
-        navigate('/');
+        navigate(`/details/${id}`);
        }
     }
 
@@ -118,16 +131,16 @@ const CreatePost=()=> {
             <label htmlFor="fileInput" >
                <Add fontSize="large" color='action'/>
             </label>
-            <input type="file" id="fileInput" style={{display:'none'}}
+            <input type='file' id="fileInput" style={{display:'none'}}
              onChange={(e)=>setFile(e.target.files[0])} />
-            <InputTextField placeholder='Title'
+            <InputTextField value={post.title} placeholder='Title'
              onChange={(e)=>handleChange(e)} name="title"/>
-            <Button variant="contained" onClick={()=>savePost()}>Publish</Button>
+            <Button variant="contained" onClick={()=>updateBlogPost()}>Update</Button>
         </StyledFormControl>
         <TextArea minRows={5} placeholder="Tell your story..." 
-        onChange={(e)=>handleChange(e)} name="description"/>
+        onChange={(e)=>handleChange(e)} value={post.description} name="description"/>
     </Container>
   )
 }
 
-export default CreatePost;
+export default Update;

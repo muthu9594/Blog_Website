@@ -6,7 +6,7 @@ import { Button , Table , TableCell , TableRow, TableHead , TableBody , styled} 
 import { categories } from "../../constants/data.js";
 
 //route dom
-import { Link } from "react-router-dom";
+import { Link,useSearchParams } from "react-router-dom";
 
 
 const StyledTable =styled(Table)`
@@ -20,17 +20,29 @@ const StyledButton=styled(Button)`
     color:#fff;
 `;
 
+const StyledLink=styled(Link)`
+    text-decoration:none;
+    color:inherit;
+`;
+
+
 const Categories = () =>{
+    const [searchParams]=useSearchParams();
+    const category=searchParams.get('category');
+
+
     return(
         <>
-        <Link to='/create' style={{textDecoration:'none'}}>
+        <StyledLink to={`/create?category=${category}`}>
             <StyledButton> Create Blog</StyledButton>
-        </Link>
+        </StyledLink>
             <StyledTable>
                 <TableHead>
                     <TableRow>
                         <TableCell>
+                            <StyledLink to='/'>
                             All Categories
+                            </StyledLink>
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -38,7 +50,11 @@ const Categories = () =>{
                     {
                         categories.map(category=>(
                           <TableRow key={category.id}>
-                            <TableCell> {category.type}</TableCell>
+                            <TableCell> 
+                            <StyledLink to={`/?category=${category.type}`}>
+                                {category.type}
+                            </StyledLink>
+                            </TableCell>
                           </TableRow>
                            
                         ))
