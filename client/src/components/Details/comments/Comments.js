@@ -33,7 +33,7 @@ const initialValues={
     name:'',
     postId:'',
     comments:'',
-    data:new Date()
+    date:new Date()
 };
 
 const Comments = ({post})=>{
