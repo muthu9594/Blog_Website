@@ -141,7 +141,7 @@ const Login = ({isUserAuthenticated })=>{
                 {
                     account === 'login' ?
                     <Wrapper>
-                        <TextField variant="standard" value={login.usernmae} onChange={(e)=>onValueChnage(e)} name="username" label="Enter username"/>
+                        <TextField variant="standard" value={login.username} onChange={(e)=>onValueChnage(e)} name="username" label="Enter username"/>
                         <TextField variant="standard" value={login.password} onChange={(e)=>onValueChnage(e)} name="password" label="Enter password"/> 
                              {error && <Error>{error}</Error>}
                         <LoginButton variant="contained" onClick={()=>loginUser()}>Login</LoginButton>
